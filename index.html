@@ -925,6 +925,33 @@
             <h2>Interaction</h2>
             <p>Join <strong><em>the album club</em></strong> - like a book club, but for music - to discuss music with others. The club is free and open to athletes, musicians, neither or both! Each meeting is led by the club member who picked the album being discussed. It is a great opportunity to learn more about music, yourself, and others.</p>
             <a href="https://thechordinnation.substack.com/s/album-club" target="_blank">Join Club</a>
+
+            <hr style="border: none; border-top: 3px solid #e0e0e0; margin: 40px 0;">
+
+            <h4 style="margin-top: 0;">Sign Up for the Album Club</h4>
+            <form id="albumClubForm" action="https://api.web3forms.com/submit" method="POST">
+                <input type="hidden" name="access_key" value="2893af81-cd46-413e-afea-62e88563ad2e">
+                <input type="hidden" name="redirect" value="false">
+
+                <div class="form-group">
+                    <label for="club-name">Name</label>
+                    <input type="text" id="club-name" name="name" placeholder="Your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="club-email">Email</label>
+                    <input type="email" id="club-email" name="email" placeholder="your@email.com" required>
+                </div>
+
+                <button type="submit" class="form-submit-btn">Sign Me Up</button>
+            </form>
+
+            <div class="form-success" id="albumClubSuccess">
+                <p>&#9654; You're in — see you at the next meeting!</p>
+            </div>
+            <div class="form-error" id="albumClubError">
+                <p>Something went wrong. Please try again.</p>
+            </div>
         </div>
     </section>
     
@@ -973,7 +1000,7 @@
         </div>
         
         <div class="performance-banner">
-            Every project is unique, so reach out for an estimate. Estimates are based on current consulting rates (i.e., 500/day, 350/half-day, 100/hour USD) but chordinnate is built around a Pay What You Can (PWYC) pricing model for everything beyond the costs on our end (e.g., survey admin cost). Think of it like an auto mechanic that charges you what they pay for parts and tells you the market value for the labor involved. You cover the cost for the parts and pay what you can for the labor.
+            Every project is unique, so reach out for an estimate. Estimates are based on USD consulting rates of 500 day | 350 half-day | 100 hourly
         </div>
     </section>
     
@@ -1068,7 +1095,7 @@
     
     <footer>
         <p>&copy; 2026 misery made productions</p>
-        <p class="design-note">website design inspired by greatest basketball sneaker of all time</p>
+        <p class="design-note">website design inspired by greatest basketball shoe of all time</p>
     </footer>
     
     <script>
@@ -1094,26 +1121,23 @@
             }
         });
 
+        // Contact form
         const form = document.getElementById('contactForm');
         const successMsg = document.getElementById('formSuccess');
         const errorMsg = document.getElementById('formError');
 
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-
             const formData = new FormData(form);
             const submitBtn = form.querySelector('.form-submit-btn');
             submitBtn.textContent = 'Sending...';
             submitBtn.disabled = true;
-
             try {
                 const response = await fetch('https://api.web3forms.com/submit', {
                     method: 'POST',
                     body: formData
                 });
-
                 const data = await response.json();
-
                 if (data.success) {
                     form.reset();
                     form.style.display = 'none';
@@ -1126,6 +1150,39 @@
             } catch (error) {
                 errorMsg.style.display = 'block';
                 submitBtn.textContent = 'Send It';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Album club form
+        const albumClubForm = document.getElementById('albumClubForm');
+        const albumClubSuccess = document.getElementById('albumClubSuccess');
+        const albumClubError = document.getElementById('albumClubError');
+
+        albumClubForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const formData = new FormData(albumClubForm);
+            const submitBtn = albumClubForm.querySelector('.form-submit-btn');
+            submitBtn.textContent = 'Signing up...';
+            submitBtn.disabled = true;
+            try {
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    albumClubForm.reset();
+                    albumClubForm.style.display = 'none';
+                    albumClubSuccess.style.display = 'block';
+                } else {
+                    albumClubError.style.display = 'block';
+                    submitBtn.textContent = 'Sign Me Up';
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                albumClubError.style.display = 'block';
+                submitBtn.textContent = 'Sign Me Up';
                 submitBtn.disabled = false;
             }
         });
